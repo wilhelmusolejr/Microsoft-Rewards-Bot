@@ -156,21 +156,78 @@ WebDriverWait(driver, waiting_time).until(EC.element_to_be_clickable((By.CSS_SEL
 driver.find_element(By.CSS_SELECTOR, "#idSIButton9").click()
 
 time.sleep(10)
-driver.execute_script('(function () {\
-    var msnShoppingGamePane = document\
+# driver.execute_script('(function () {\
+#     var msnShoppingGamePane = document\
+#     .querySelector("shopping-page-base")\
+#     ?.shadowRoot.querySelector("shopping-homepage")\
+#     ?.shadowRoot.querySelector("msft-feed-layout")\
+#     ?.shadowRoot.querySelector("msn-shopping-game-pane");\
+#     if (msnShoppingGamePane != null) {\
+#     msnShoppingGamePane.scrollIntoView();\
+#     msnShoppingGamePane.style.setProperty("grid-area", "slot1");\
+#     msnShoppingGamePane.setAttribute("gamestate", "active");\
+#     msnShoppingGamePane.cardsPerGame = 1;\
+#     msnShoppingGamePane.resetGame();\
+#     } else alert("Unable to locate the shopping game!");\
+#     })();')
+
+# elemental = driver.execute_script('return document\
+#     .querySelector("shopping-page-base")\
+#     ?.shadowRoot.querySelector("shopping-homepage")\
+#     ?.shadowRoot.querySelector("msft-feed-layout")\
+#     ?.shadowRoot.querySelector("msn-shopping-game-pane")\
+#     ?.shadowRoot.querySelectorAll(".shopping-game-card-outline")')
+
+# quering products
+products = driver.execute_script('return document\
     .querySelector("shopping-page-base")\
     ?.shadowRoot.querySelector("shopping-homepage")\
     ?.shadowRoot.querySelector("msft-feed-layout")\
-    ?.shadowRoot.querySelector("msn-shopping-game-pane");\
-    if (msnShoppingGamePane != null) {\
-    msnShoppingGamePane.scrollIntoView();\
-    msnShoppingGamePane.style.setProperty("grid-area", "slot1");\
-    msnShoppingGamePane.setAttribute("gamestate", "active");\
-    msnShoppingGamePane.cardsPerGame = 1;\
-    msnShoppingGamePane.resetGame();\
-    } else alert("Unable to locate the shopping game!");\
-    })();')
+    ?.shadowRoot.querySelector("msn-shopping-game-pane")\
+    ?.shadowRoot.querySelectorAll(".shopping-game-card-outline")\
+    ')
 
+
+targetClick = random.randrange(0, len(products))
+driver.execute_script('document\
+  .querySelector("shopping-page-base")\
+  ?.shadowRoot.querySelector("shopping-homepage")\
+  ?.shadowRoot.querySelector("msft-feed-layout")\
+  ?.shadowRoot.querySelector("msn-shopping-game-pane")\
+  .shadowRoot.querySelectorAll(".shopping-game-card-outline")['+str(targetClick)+']\
+  .querySelector(".shopping-select-overlay-button")\
+  .click();')
+print("pressed product successfully")
+
+numbuh = 0
+for iterate in products:
+    title = driver.execute_script('return document\
+  .querySelector("shopping-page-base")\
+  ?.shadowRoot.querySelector("shopping-homepage")\
+  ?.shadowRoot.querySelector("msft-feed-layout")\
+  ?.shadowRoot.querySelector("msn-shopping-game-pane")\
+  ?.shadowRoot.querySelectorAll(".shopping-game-card-outline")['+str(numbuh)+']\
+  ?.querySelector(".shopping-game-card")?.children[0].shadowRoot.children[0].children[0].children[1].querySelector("a").getAttribute("title");')
+    
+    price = driver.execute_script('return document\
+  .querySelector("shopping-page-base")\
+  ?.shadowRoot.querySelector("shopping-homepage")\
+  ?.shadowRoot.querySelector("msft-feed-layout")\
+  ?.shadowRoot.querySelector("msn-shopping-game-pane")\
+  .shadowRoot.querySelectorAll(".shopping-game-card-outline")['+str(numbuh)+']\
+  .children[0].children[0].shadowRoot.querySelector(\
+    ".shopping-price-span-text"\
+  ).textContent;')
+    
+    print(title)
+    print(price)
+    numbuh += 1
+
+
+
+def expand_shadow_element(element):
+  shadow_root = driver.execute_script('return arguments[0].shadowRoot', element)
+  return shadow_root
 
 exit()
 
